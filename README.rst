@@ -11,11 +11,12 @@ Tools and scripts for mining crypto currencies.
 This projects aims to create a platform that provides an easy way of adding miners for different cryptocurrencies,
 isolating each miner into a docker container, easy to build, update and independent of the system.
 
-Miners are supported:
+Miners currently supported:
 
 * Ether (`ethminer <https://github.com/ethereum-mining/ethminer>`_).
 * Storj (`storj <https://storj.io/>`_).
 
+Full `documentation <http://barrenero.readthedocs.io>`_ for Barrenero project.
 
 Help us Donating
 ----------------
@@ -37,41 +38,41 @@ Quick start
 
 1. Install services:
 
-.. code:: bash
+    .. code:: console
 
-    ./make install /path/to/storj/storage/volume 4000-4004
+        ./make install /path/to/storj/storage/volume 4000-4004
 
 1. (Optional) Install with Nvidia overclocking:
 
-.. code:: bash
+    .. code:: console
 
-    ./make install --nvidia /path/to/storj/storage/volume 4000-4004
+        ./make install --nvidia /path/to/storj/storage/volume 4000-4004
 
 2. Move to installation folder:
 
-.. code:: bash
+    .. code:: console
 
-    cd /usr/local/lib/barrenero/barrenero-miner/
+        cd /usr/local/lib/barrenero/barrenero-miner/
 
 3. Configure Ether miner parameters in *setup.cfg* file.
 
-3. (Optional) Configure Nvidia overclock parameters in *setup.cfg* file.
+4. (Optional) Configure Nvidia overclock parameters in *setup.cfg* file.
 
-4. Configure Storj miner using defined format by Storj service in *storj.json* file.
+5. Configure Storj miner using defined format by Storj service in *storj.json* file.
 
-5. Build all services:
+6. Build all services:
 
-.. code:: bash
+    .. code:: console
 
-    ./make build ether
-    ./make build storj
+        ./make build ether
+        ./make build storj
 
-6. Reboot or restart Systemd unit:
+7. Reboot or restart Systemd unit:
 
-.. code:: bash
+    .. code:: console
 
-    sudo service barrenero_miner_ether restart
-    sudo service barrenero_miner_storj restart
+        sudo service barrenero_miner_ether restart
+        sudo service barrenero_miner_storj restart
 
 Systemd
 -------
@@ -81,14 +82,14 @@ each miner, as well as overclocking scripts.
 
 To check a miner service status:
 
-.. code:: bash
+.. code:: console
 
     service barrenero_miner_<miner> status
     service barrenero_miner_ether status
 
 To check a overclock service status:
 
-.. code:: bash
+.. code:: console
 
     service barrenero_nvidia status
 
@@ -97,7 +98,8 @@ Run manually
 
 As well as using systemd services you can run miners manually using:
 
-.. code:: bash
+.. code:: console
+    
     ./make run <miner>
 
 TODO
