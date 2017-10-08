@@ -1,0 +1,4 @@
+dockerfiles/
+templates/
+.git/
+.gitignore

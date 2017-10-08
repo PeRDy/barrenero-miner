@@ -1,0 +1,16 @@
+[Unit]
+Description=Storj miner service
+After=docker.service
+Requires=docker.service
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+WorkingDirectory={{ app.path }}
+ExecStartPre=/usr/bin/python3.6 make create --no-nvidia --ports={{ storj.ports }}:{{ storj.ports }} --storage={{ storj.path }} storj daemon -F
+ExecStart=/usr/bin/docker start -a barrenero-miner-storj
+ExecStartPost=/bin/sleep 10 ; /usr/bin/docker exec barrenero-miner-storj storjshare start --config storj.json
+ExecStop=/usr/bin/docker stop -t 2 barrenero-miner-storj
+Restart=always
+RestartSec=5
