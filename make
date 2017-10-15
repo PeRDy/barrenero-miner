@@ -61,14 +61,13 @@ def _create_network(name):
 
 
 @command(command_type=CommandType.SHELL_WITH_HELP,
-         args=((('app',), {'help': 'App name', 'choices': APP_CHOICES}),
+         args=((('-a', '--app'), {'help': 'App name', 'choices': APP_CHOICES, 'nargs': '*', 'default': APP_CHOICES}),
                (('-f', '--dockerfile'), {'help': 'Dockerfile'})),
          parser_opts={'help': 'Docker build for local environment'})
 def build(*args, **kwargs):
-    cmd = shlex.split(
-        'docker build -t barrenero-miner-{0}:latest -f dockerfiles/{0}/Dockerfile .'.format(kwargs["app"]))
-    cmd += list(args)
-    return [cmd]
+    build_fmt = 'docker build -t barrenero-miner-{0}:latest -f dockerfiles/{0}/Dockerfile .'
+    cmds = [shlex.split(build_fmt.format(app)) + list(args) for app in kwargs['app']]
+    return cmds
 
 
 @command(command_type=CommandType.SHELL,
