@@ -5,6 +5,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+from functools import wraps
 
 try:
     import docker
@@ -30,10 +31,22 @@ logger = logging.getLogger('cli')
 
 docker_cli = docker.from_env()
 
-APP_CHOICES = (
-    'ether',
-    'storj',
-)
+APP_CHOICES = {
+    'ether': 'barrenero_miner_ether',
+    'storj': 'barrenero_miner_storj'
+}
+
+
+def superuser(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not os.geteuid() == 0:
+            logger.error('Script must be run as root')
+            return -1
+
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 def _docker_flags(name, code, ports, network, storage):
@@ -61,12 +74,23 @@ def _create_network(name):
 
 
 @command(command_type=CommandType.SHELL_WITH_HELP,
-         args=((('-a', '--app'), {'help': 'App name', 'choices': APP_CHOICES, 'nargs': '*', 'default': APP_CHOICES}),
+         args=((('-a', '--app'), {'help': 'App name', 'choices': tuple(APP_CHOICES.keys()), 'nargs': '*',
+                                  'default': tuple(APP_CHOICES.keys())}),
                (('-f', '--dockerfile'), {'help': 'Dockerfile'})),
          parser_opts={'help': 'Docker build for local environment'})
 def build(*args, **kwargs):
     build_fmt = 'docker build -t barrenero-miner-{0}:latest -f dockerfiles/{0}/Dockerfile .'
     cmds = [shlex.split(build_fmt.format(app)) + list(args) for app in kwargs['app']]
+    return cmds
+
+
+@command(command_type=CommandType.SHELL_WITH_HELP,
+         args=((('-a', '--app'), {'help': 'App name', 'choices': tuple(APP_CHOICES.keys()), 'nargs': '*',
+                                  'default': tuple(APP_CHOICES.keys())}),),
+         parser_opts={'help': 'Restart Systemd service'})
+@superuser
+def restart(*args, **kwargs):
+    cmds = ['service {} restart'.format(s) for k, s in APP_CHOICES.items() if k in kwargs['app']]
     return cmds
 
 
@@ -121,11 +145,8 @@ def create(*args, **kwargs):
                (('--path',), {'help': 'Barrenero full path', 'default': '/usr/local/lib/barrenero'}),
                (('-n', '--nvidia'), {'help': 'Adds nvidia overclock service', 'action': 'store_true'}),),
          parser_opts={'help': 'Install the application in the system'})
+@superuser
 def install(*args, **kwargs):
-    if not os.geteuid() == 0:
-        logger.error('Script must be run as root')
-        return -1
-
     path = os.path.abspath(os.path.join(kwargs['path'], 'barrenero-miner'))
 
     # Jinja2 builder
