@@ -31,7 +31,10 @@ class NvidiaTuning:
         self.config.read(config)
 
         if not self.config.has_section('nvidia'):
-            raise ValueError("Cannot found nvidia section in config file")
+            raise ValueError('Cannot found nvidia section in config file')
+
+        if not self.config.get('nvidia', 'graphic_cards'):
+            raise ValueError('Cannot found graphic_cards value defined in nvidia section')
 
         self.logger = logging.getLogger('miner')
 
@@ -53,6 +56,8 @@ class NvidiaTuning:
         return return_code
 
     def run(self):
+        self._run_command('sudo service xdm start')
+
         # Wait before OC
         time.sleep(10)
 
@@ -68,8 +73,8 @@ class NvidiaTuning:
 
         settings = [(tag, s, f) for tag, subs in self.NVIDIA_SETTINGS.items() for s, f in subs.items()]
         for tag, setting, flag in settings:
-            for i in range(self.config.getint('core', 'graphic_cards', fallback=0)):
-                value = self.config.get('nvidia', setting, fallback=None)
+            for i in [int(x) for x in self.config.get('nvidia', 'graphic_cards').split(',')]:
+                value = self.config.get(f'nvidia:{i}', setting, fallback=None)
                 if value:
                     self._run_command(f'nvidia-settings -c :0 -a "[{tag}:{i}]/{flag}={value}"')
 

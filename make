@@ -165,7 +165,8 @@ def create(*args, **kwargs):
          args=((('storj_path',), {'help': 'Path to storj storage volume', 'default': '/storage/storj'}),
                (('storj_ports',), {'help': 'Range of storj ports to bind', 'default': '4000-4010'}),
                (('--path',), {'help': 'Barrenero full path', 'default': '/usr/local/lib/barrenero'}),
-               (('-n', '--nvidia'), {'help': 'Adds nvidia overclock service', 'action': 'store_true'}),),
+               (('-n', '--nvidia'), {'help': 'Adds nvidia overclock service for a graphic card in that slot',
+                                     'nargs': '*', 'type': int}),),
          parser_opts={'help': 'Install the application in the system'})
 @donate
 @superuser
@@ -220,6 +221,36 @@ def install(*args, **kwargs):
 
     logger.info("[Barrenero Miner] Installation completed")
 
+
+@command(command_type=CommandType.PYTHON,
+         args=((('-n', '--nvidia'), {'help': 'Adds nvidia overclock service for a graphic card in that slot',
+                                     'nargs': '*', 'type': int}),),
+         parser_opts={'help': 'Install the application in the system'})
+def foo(*args, **kwargs):
+    path = os.path.abspath(os.path.join('.', 'foo'))
+
+    # Jinja2 builder
+    j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.join(path, 'templates')))
+    systemd_j2_context = {
+        'app': {
+            'name': 'barrenero-miner',
+            'path': path,
+        },
+        'ether': {},
+        'nvidia': kwargs['nvidia']
+    }
+
+    # Create app directory
+    logger.info("[Barrenero Miner] Install app under %s", path)
+    shutil.rmtree(path, ignore_errors=True)
+    shutil.copytree('.', path)
+
+    # Create setup file
+    logger.info("[Barrenero Miner] Defining config file")
+    with open(os.path.join(path, 'setup.cfg'), 'w') as f:
+        f.write(j2_env.get_template('setup.cfg.jinja2').render(systemd_j2_context))
+
+    logger.info("[Barrenero Miner] Installation completed")
 
 if __name__ == '__main__':
     sys.exit(Main().run())
