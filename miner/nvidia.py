@@ -26,7 +26,7 @@ class NvidiaTuning:
         }
     }
 
-    def __init__(self, config='miner.cfg'):
+    def __init__(self, config='setup.cfg'):
         self.config = ConfigParser()
         self.config.read(config)
 

@@ -9,15 +9,12 @@ from configparser import ConfigParser
 
 
 class Miner:
-    def __init__(self, config='miner.cfg'):
+    def __init__(self, config='setup.cfg'):
         self._command = None
         self._account = None
 
         self.config = ConfigParser()
         self.config.read(config)
-
-        if not self.config.has_section('core'):
-            raise ValueError("Cannot found core section in config file")
 
         if not self.config.has_section('ether'):
             raise ValueError("Cannot found miner section in config file")
