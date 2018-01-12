@@ -8,7 +8,7 @@ WantedBy=multi-user.target
 
 [Service]
 WorkingDirectory={{ app.path }}
-ExecStartPre=/usr/bin/python3.6 make create ether ether
+ExecStartPre=/usr/bin/python3.6 make create --nvidia ether ether
 ExecStart=/usr/bin/nvidia-docker start -a barrenero-miner-ether
 ExecStop=/usr/bin/docker stop -t 2 barrenero-miner-ether
 Restart=always

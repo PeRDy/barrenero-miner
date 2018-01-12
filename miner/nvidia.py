@@ -37,6 +37,8 @@ class NvidiaTuning:
             raise ValueError('Cannot found graphic_cards value defined in nvidia section')
 
         self.logger = logging.getLogger('miner')
+        self.logger.setLevel(logging.DEBUG)
+        self.logger.addHandler(logging.FileHandler('/var/log/barrenero/miner/nvidia.log'))
 
     def _run_command(self, command, background=False, **kwargs):
         self.logger.info('Run command: %s', command)
@@ -56,14 +58,7 @@ class NvidiaTuning:
         return return_code
 
     def run(self):
-        self._run_command('sudo service xdm start')
-
-        # Wait before OC
-        time.sleep(10)
-
-        # nvidia-settings config
-        os.environ['DISPLAY'] = ':0'
-        os.environ['XAUTHORITY'] = '/var/run/xdm/root/:0'
+        self._run_command('X :0', background=True)
 
         # nvidia-smi config
         for setting, flag in self.NVIDIA_SMI.items():
@@ -77,6 +72,3 @@ class NvidiaTuning:
                 value = self.config.get(f'nvidia:{i}', setting, fallback=None)
                 if value:
                     self._run_command(f'nvidia-settings -c :0 -a "[{tag}:{i}]/{flag}={value}"')
-
-        time.sleep(5)
-        self._run_command('sudo service xdm stop')

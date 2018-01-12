@@ -7,5 +7,4 @@ WantedBy=multi-user.target
 [Service]
 WorkingDirectory={{ app.path }}
 ExecStart=/usr/bin/python3.6 run_nvidia.py nvidia_tuning
-Restart=always
-RemainAfterExit=no
+RemainAfterExit=yes

@@ -67,7 +67,7 @@ def donate(func):
     return wrapper
 
 
-def _docker_flags(name, code, ports, network, storage):
+def _docker_flags(name, code, ports, network, storage, nvidia):
     flags = []
     # App volumes
     if storage:
@@ -75,6 +75,9 @@ def _docker_flags(name, code, ports, network, storage):
 
     if code:
         flags.append('-v {}:/srv/apps/barrenero-miner-{}'.format(os.getcwd(), name))
+
+    if not nvidia:
+        flags.append('--runtime=nvidia')
 
     flags.append('-v {}:/srv/apps/barrenero-miner-{}/logs'.format(os.path.join("/var/log/barrenero/miner", name), name))
 
@@ -121,16 +124,15 @@ def restart(*args, **kwargs):
                (('-i', '--interactive'), {'help': 'Docker image tag', 'action': 'store_true'}),
                (('-p', '--ports'), {'help': 'Ports to bind', 'nargs': '*', 'default': []}),
                (('--storage',), {'help': 'Storage folder for Storj'}),
-               (('--no-nvidia',), {'help': 'Run with docker', 'action': 'store_true'})),
+               (('--nvidia',), {'help': 'Run with nvidia docker', 'action': 'store_true'})),
          parser_opts={'help': 'Run application'})
 @donate
 def run(*args, **kwargs):
     _create_network(kwargs['network'])
 
-    # Select docker binary
-    docker_bin = 'docker' if kwargs['no_nvidia'] else 'nvidia-docker'
-
-    flags = _docker_flags(kwargs['app'], kwargs['code'], kwargs['ports'], kwargs['network'], kwargs['storage'])
+    docker_bin = 'nvidia-docker' if kwargs['nvidia'] else 'docker'
+    flags = _docker_flags(kwargs['app'], kwargs['code'], kwargs['ports'], kwargs['network'], kwargs['storage'],
+                          kwargs['nvidia'])
     interactive_flag = '-it' if kwargs['interactive'] else '-d'
 
     cmd = shlex.split('{} run {} {} barrenero-miner-{}:latest -q --skip-check'.format(
@@ -145,16 +147,15 @@ def run(*args, **kwargs):
                (('-c', '--code',), {'help': 'Add code folder as volume', 'action': 'store_true'}),
                (('--ports',), {'help': 'Ports to bind', 'nargs': '*', 'default': []}),
                (('--storage',), {'help': 'Storage folder for Storj'}),
-               (('--no-nvidia',), {'help': 'Run with docker', 'action': 'store_true'})),
+               (('--nvidia',), {'help': 'Run with nvidia docker', 'action': 'store_true'})),
          parser_opts={'help': 'Run application'})
 @donate
 def create(*args, **kwargs):
     _create_network(kwargs['network'])
 
-    # Select docker binary
-    docker_bin = 'docker' if kwargs['no_nvidia'] else 'nvidia-docker'
-
-    flags = _docker_flags(kwargs['app'], kwargs['code'], kwargs['ports'], kwargs['network'], kwargs['storage'])
+    docker_bin = 'nvidia-docker' if kwargs['nvidia'] else 'docker'
+    flags = _docker_flags(kwargs['app'], kwargs['code'], kwargs['ports'], kwargs['network'], kwargs['storage'],
+                          kwargs['nvidia'])
 
     cmd = shlex.split('{} create {} barrenero-miner-{}:latest'.format(docker_bin, flags, kwargs['app']))
     cmd += list(args)
@@ -221,36 +222,6 @@ def install(*args, **kwargs):
 
     logger.info("[Barrenero Miner] Installation completed")
 
-
-@command(command_type=CommandType.PYTHON,
-         args=((('-n', '--nvidia'), {'help': 'Adds nvidia overclock service for a graphic card in that slot',
-                                     'nargs': '*', 'type': int}),),
-         parser_opts={'help': 'Install the application in the system'})
-def foo(*args, **kwargs):
-    path = os.path.abspath(os.path.join('.', 'foo'))
-
-    # Jinja2 builder
-    j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.join(path, 'templates')))
-    systemd_j2_context = {
-        'app': {
-            'name': 'barrenero-miner',
-            'path': path,
-        },
-        'ether': {},
-        'nvidia': kwargs['nvidia']
-    }
-
-    # Create app directory
-    logger.info("[Barrenero Miner] Install app under %s", path)
-    shutil.rmtree(path, ignore_errors=True)
-    shutil.copytree('.', path)
-
-    # Create setup file
-    logger.info("[Barrenero Miner] Defining config file")
-    with open(os.path.join(path, 'setup.cfg'), 'w') as f:
-        f.write(j2_env.get_template('setup.cfg.jinja2').render(systemd_j2_context))
-
-    logger.info("[Barrenero Miner] Installation completed")
 
 if __name__ == '__main__':
     sys.exit(Main().run())
