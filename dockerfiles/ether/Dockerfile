@@ -1,5 +1,5 @@
-FROM nvidia/cuda:latest
-MAINTAINER PeRDy (http://www.perdy.top)
+FROM nvidia/cuda:latest-ubuntu-17.04
+LABEL maintainer="José Antonio Perdiguero López <perdy.hh@gmail.com>"
 
 ENV APP=barrenero-miner-ether
 
@@ -18,7 +18,17 @@ RUN apt-get update && \
         software-properties-common\
         git \
         curl \
-        cmake
+        cmake \
+        python3.6 \
+        python3.6-pip && \
+    apt-get clean && \
+    rm -rf /tmp/* \
+        /etc/apt/sources.list.d/passenger.list \
+        /var/tmp/* \
+        /var/lib/apt/lists/* \
+        /var/cache/apt/archives/*.deb \
+        /var/cache/apt/archives/partial/*.deb \
+        /var/cache/apt/*.bin
 
 # Install ethminer
 RUN git clone https://github.com/ethereum-mining/ethminer /srv/apps/ethminer
@@ -26,12 +36,8 @@ WORKDIR /srv/apps/ethminer
 RUN mkdir build; cd build && \
     cmake .. -DETHASHCUDA=ON -DETHASHCL=OFF && \
     cmake --build . && \
-    make install
-
-# Install python3.6
-RUN add-apt-repository -y ppa:jonathonf/python-3.6 && \
-    apt-get update && \
-    apt-get install -y python3.6 python3-pip
+    make install && \
+    rm -rf /srv/apps/ethminer
 
 # Create project dirs
 RUN mkdir -p /srv/apps/$APP/logs
@@ -40,7 +46,8 @@ WORKDIR /srv/apps/$APP
 # Install pip requirements
 COPY requirements.txt constraints.txt /srv/apps/$APP/
 RUN python3.6 -m pip install --upgrade pip && \
-    python3.6 -m pip install --no-cache-dir -r requirements.txt -c constraints.txt
+    python3.6 -m pip install --no-cache-dir -r requirements.txt -c constraints.txt && \
+    rm -rf $HOME/.cache/pip/*
 
 # Clean up
 RUN apt-get clean && \
@@ -49,7 +56,6 @@ RUN apt-get clean && \
         apt-transport-https \
         software-properties-common \
         cmake && \
-    rm -rf $HOME/.cache/pip/* \
         /tmp/* \
         /etc/apt/sources.list.d/passenger.list \
         /var/tmp/* \

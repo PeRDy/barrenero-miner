@@ -97,10 +97,9 @@ class Main(ClinnerMain):
 
 
 @command(command_type=CommandType.PYTHON,
-         args=((('-c', '--config-file'), {'help': 'Config file', 'default': 'setup.cfg'}),
-               (('--nvidia-tuning',), {'help': 'Enable nvidia tuning', 'action': 'store_true', 'default': False}),),
+         args=((('-c', '--config-file'), {'help': 'Config file', 'default': '/etc/barrenero/miner/ether.cfg'}),),
          parser_opts={'help': 'Run Ether miner'})
-def ether(*args, **kwargs):
+def start(*args, **kwargs):
     EtherMiner(config=kwargs['config_file']).run()
 
 

@@ -37,9 +37,11 @@ Requirements
 Quick start
 -----------
 
-1. Install services:
+Run Ether miner:
 
     .. code:: console
+
+        docker run -v /etc/barrenero/miner/:/etc/barrenero/miner/ perdy/barrenero-miner-ether:latest
 
         ./make install /path/to/storj/storage/volume 4000-4004
 

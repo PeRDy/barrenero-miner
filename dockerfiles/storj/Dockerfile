@@ -1,5 +1,5 @@
 FROM node:boron-alpine
-MAINTAINER PeRDy (http://www.perdy.top)
+LABEL maintainer="José Antonio Perdiguero López <perdy.hh@gmail.com>"
 
 ENV APP=barrenero-miner-storj
 
