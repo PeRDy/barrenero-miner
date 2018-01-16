@@ -9,7 +9,7 @@ from configparser import ConfigParser
 
 
 class Miner:
-    def __init__(self, config='setup.cfg'):
+    def __init__(self, config):
         self._command = None
         self._account = None
 
@@ -17,7 +17,7 @@ class Miner:
         self.config.read(config)
 
         if not self.config.has_section('ether'):
-            raise ValueError("Cannot found miner section in config file")
+            raise ValueError("Cannot found storj section in config file")
 
         self.logger = logging.getLogger('ether')
         self.values_logger = logging.getLogger('values')

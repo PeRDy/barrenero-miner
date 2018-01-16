@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 import logging
 import logging.config
 import sys
@@ -9,9 +9,13 @@ try:
     from clinner.run import Main as ClinnerMain
 except (ImportError, ModuleNotFoundError):
     import pip
+    import site
+    import importlib
 
     print('Installing Clinner')
     pip.main(['install', '--user', '-qq', 'clinner'])
+
+    importlib.reload(site)
 
     from clinner.command import command, Type as CommandType
     from clinner.run import Main as ClinnerMain
@@ -97,7 +101,7 @@ class Main(ClinnerMain):
 
 
 @command(command_type=CommandType.PYTHON,
-         args=((('-c', '--config-file'), {'help': 'Config file', 'default': '/etc/barrenero/miner/ether.cfg'}),),
+         args=((('-c', '--config-file'), {'help': 'Config file', 'default': 'config/ether.cfg'}),),
          parser_opts={'help': 'Run Ether miner'})
 def start(*args, **kwargs):
     EtherMiner(config=kwargs['config_file']).run()
