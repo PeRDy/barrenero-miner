@@ -54,6 +54,6 @@ RUN python3.6 -m pip install --upgrade pip && \
     rm -rf $HOME/.cache/pip/*
 
 # Copy application
-COPY dockerfiles/ether /srv/apps/$APP/
+COPY . /srv/apps/$APP/
 
 ENTRYPOINT ["./run_ether.py"]
