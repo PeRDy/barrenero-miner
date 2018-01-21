@@ -32,6 +32,6 @@ COPY requirements.txt constraints.txt /srv/apps/$APP/
 RUN python3 -m pip install -r requirements.txt -c constraints.txt
 
 # Copy application
-COPY . /srv/apps/$APP/
+COPY dockerfiles/storj /srv/apps/$APP/
 
 ENTRYPOINT ["./run_storj.py"]

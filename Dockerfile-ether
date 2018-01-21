@@ -61,6 +61,6 @@ RUN apt-get clean && \
         /var/cache/apt/*.bin
 
 # Copy application
-COPY . /srv/apps/$APP/
+COPY dockerfiles/ether /srv/apps/$APP/
 
 ENTRYPOINT ["./run_ether.py"]
