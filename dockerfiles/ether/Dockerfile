@@ -1,13 +1,7 @@
-FROM nvidia/cuda:latest-ubuntu-17.04
+FROM nvidia/cuda:9.1-devel
 LABEL maintainer="José Antonio Perdiguero López <perdy.hh@gmail.com>"
 
 ENV APP=barrenero-miner-ether
-
-RUN apt-get update && \
-    apt-get install -y \
-        locales \
-        locales-all
-ENV LANG='es_ES.UTF-8' LANGUAGE='es_ES.UTF-8:es' LC_ALL='es_ES.UTF-8'
 
 # Install build requirements
 RUN apt-get update && \
@@ -18,9 +12,7 @@ RUN apt-get update && \
         software-properties-common\
         git \
         curl \
-        cmake \
-        python3.6 \
-        python3.6-pip && \
+        cmake && \
     apt-get clean && \
     rm -rf /tmp/* \
         /etc/apt/sources.list.d/passenger.list \
@@ -29,6 +21,10 @@ RUN apt-get update && \
         /var/cache/apt/archives/*.deb \
         /var/cache/apt/archives/partial/*.deb \
         /var/cache/apt/*.bin
+
+RUN add-apt-repository -y ppa:jonathonf/python-3.6 && \
+    apt-get update && \
+    apt-get install -y python3.6 python3-pip
 
 # Install ethminer
 RUN git clone https://github.com/ethereum-mining/ethminer /srv/apps/ethminer
