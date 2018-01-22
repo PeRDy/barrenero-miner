@@ -61,4 +61,4 @@ RUN python3.6 -m pip install --upgrade pip && \
 # Copy application
 COPY . /srv/apps/$APP/
 
-ENTRYPOINT ["./run_ether.py"]
+ENTRYPOINT ["python3.6", "run_ether.py"]
