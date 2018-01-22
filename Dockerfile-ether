@@ -3,6 +3,11 @@ LABEL maintainer="José Antonio Perdiguero López <perdy.hh@gmail.com>"
 
 ENV APP=barrenero-miner-ether
 
+# Install locales
+RUN apt-get update && \
+    apt-get install -y locales locales-all
+ENV LANG='es_ES.UTF-8' LANGUAGE='es_ES.UTF-8:es' LC_ALL='es_ES.UTF-8' PYTHONIOENCODING='utf-8'
+
 # Install build requirements
 RUN apt-get update && \
     apt-get install -y \
