@@ -17,9 +17,6 @@ class Miner:
         if not self.config.has_section('storj'):
             raise ValueError("Cannot found storj section in config file")
 
-        self.logger = logging.getLogger('ether')
-        self.values_logger = logging.getLogger('values')
-
     @property
     def daemon_command(self):
         if not self._daemon_command:
@@ -37,7 +34,6 @@ class Miner:
 
     def run(self):
         try:
-            self.logger.info('Run command: %s', self.daemon_command)
             daemon = subprocess.Popen(self.daemon_command)
 
             time.sleep(10)
