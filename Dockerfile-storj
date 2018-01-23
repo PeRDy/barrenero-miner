@@ -1,9 +1,5 @@
-FROM node:alpine
+FROM node:boron-alpine
 LABEL maintainer="José Antonio Perdiguero López <perdy.hh@gmail.com>"
-
-ENV APP=barrenero-miner-storj
-RUN npm config set user 0 && \
-    npm config set unsafe-perm true
 
 RUN apk add --no-cache \
         bash \
@@ -29,7 +25,9 @@ WORKDIR /srv/apps/$APP
 
 # Install python requirements
 COPY requirements.txt constraints.txt /srv/apps/$APP/
-RUN python3 -m pip install -r requirements.txt -c constraints.txt
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install --no-cache-dir -r requirements.txt -c constraints.txt && \
+    rm -rf $HOME/.cache/pip/*
 
 # Copy application
 COPY . /srv/apps/$APP/
