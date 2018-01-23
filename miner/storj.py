@@ -30,8 +30,8 @@ class Miner:
     @property
     def nodes_commands(self):
         if not self._nodes_commands:
-            self._nodes_commands = \
-                [shlex.split(f'storjshare start -c {c.strip()}') for c in self.config.get('storj', 'nodes').split(',')]
+            self._nodes_commands = [shlex.split('storjshare start -c {}'.format(c.strip()))
+                                    for c in self.config.get('storj', 'nodes').split(',')]
 
         return self._nodes_commands
 
