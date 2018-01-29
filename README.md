@@ -1,4 +1,4 @@
-# Barrenero Miner
+# Barrenero Miner Ether
 Tools and scripts for mining crypto currencies.
 
 * **Version**: 1.0.0
@@ -10,8 +10,7 @@ isolating each miner into a docker container, easy to build, update and independ
 
 Miners currently supported:
 
-* Ether ([ethminer](https://github.com/ethereum-mining/ethminer)).
-* Storj ([storj](https://storj.io/)).
+* [Ethminer](https://github.com/ethereum-mining/ethminer).
 
 Full [documentation](http://barrenero.readthedocs.io) for Barrenero project.
 
@@ -27,10 +26,4 @@ This project is free and open sourced, you can use it, spread the word, contribu
 * Nvidia Docker. Follow instructions [here](https://github.com/NVIDIA/nvidia-docker).
 
 ## Quick start
-* Run Ether miner: `docker run -v /etc/barrenero/miner/:/etc/barrenero/miner/ perdy/barrenero-miner-ether:latest`
-* Run Storj miner: `docker run -p=4000-4003:4000-4003 -v /etc/barrenero/miner/:/etc/barrenero/miner/ perdy/barrenero-miner-storj:latest`
-* Run Nvidia Overclock: `python /usr/local/lib/barrenero/nvidia_tuning.py`
-
-## TODO
-* Add ZCash miner.
-* Add Monero miner.
+* Run miner: `docker run -v /etc/barrenero/miner/:/etc/barrenero/miner/ perdy/barrenero-miner-ether:latest`
