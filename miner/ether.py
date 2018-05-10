@@ -27,15 +27,9 @@ class Miner:
         if not self._command:
             bin_path = os.path.expanduser(self.config.get('ether', 'bin'))
             args = self.config.get('ether', 'args', fallback='')
-            pool_primary = self.config.get('ether', 'pool_primary')
-            pool_secondary = self.config.get('ether', 'pool_secondary')
-            worker_name = self.config.get('ether', 'worker', fallback='Worker')
-            email = self.config.get('ether', 'email', fallback=None)
-            worker = f'{self.account}.{worker_name}'
-            if email:
-                worker += f'/{email}'
+            pools = [p.strip() for p in self.config.get('ether', 'pools', fallback='').split('\n') if p.strip()]
 
-            self._command = f'{bin_path} {args} -S {pool_primary} -FS {pool_secondary} -O {worker}'
+            self._command = f'{bin_path} {args} ' + ' '.join([f'-P {pool}' for pool in pools])
 
         return self._command
 
