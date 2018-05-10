@@ -34,7 +34,7 @@ RUN apt-get update && \
     cmake .. -DETHASHCUDA=ON -DETHASHCL=OFF && \
     cmake --build . && \
     make install && \
-    python -m pip install --no-cache-dir --upgrade pip pipenv && \
+    python3.6 -m pip install --no-cache-dir --upgrade pip pipenv && \
     pipenv install --system --deploy --ignore-pipfile && \
     apt-get remove --purge -y $BUILD_PACKAGES && \
     apt-get clean && \
