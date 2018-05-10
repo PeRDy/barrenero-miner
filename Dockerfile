@@ -1,4 +1,4 @@
-FROM nvidia/cuda:9.1-runtime
+FROM nvidia/cuda:9.1-devel
 LABEL maintainer="José Antonio Perdiguero López <perdy@perdy.io>"
 
 ENV APP=barrenero-miner-ether
