@@ -1,0 +1,43 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "65b33fb95632e16909924e01791052051e1063dadceca6a066c74606444f6f3d"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.6"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "clinner": {
+            "hashes": [
+                "sha256:0d5e7e212bc589935796e8c98f7f306bcae7f75df1d55436903186aa06c0e7b5",
+                "sha256:fdb77e1584f22097a476885fc75a822d214bc5abe8cd5ce4e1cd46d89cf2b377"
+            ],
+            "index": "pypi",
+            "version": "==1.9.4"
+        },
+        "colorama": {
+            "hashes": [
+                "sha256:463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda",
+                "sha256:48eb22f4f8461b1df5734a074b57042430fb06e1d61bd1e11b078c0fe6d7a1f1"
+            ],
+            "version": "==0.3.9"
+        },
+        "colorlog": {
+            "hashes": [
+                "sha256:418db638c9577f37f0fae4914074f395847a728158a011be2a193ac491b9779d",
+                "sha256:8b234ebae1ba1237bc79c0d5f1f47b31a3f3e90c0b4c2b0ebdde63a174d3b97b"
+            ],
+            "version": "==3.1.4"
+        }
+    },
+    "develop": {}
+}

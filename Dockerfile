@@ -24,7 +24,7 @@ RUN mkdir -p /srv/apps/$APP/logs
 WORKDIR /srv/apps/$APP
 
 # Install ethminer and python requirements
-COPY requirements.txt constraints.txt /srv/apps/$APP/
+COPY Pipfile Pipfile.lock /srv/apps/$APP/
 RUN apt-get update && \
     apt-get install -y --no-install-recommends $BUILD_PACKAGES && \
     git clone https://github.com/ethereum-mining/ethminer /tmp/ethminer && \
