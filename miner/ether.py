@@ -53,7 +53,7 @@ class Miner:
         os.environ['GPU_MAX_ALLOC_PERCENT'] = '100'
         os.environ['GPU_SINGLE_ALLOC_PERCENT'] = '100'
 
-        hashes_regex = re.compile(r'gpu/(\d+).+?(\d+\.\d+)')
+        hashes_regex = re.compile(r'gpu(\d+).+?(\d+\.\d+)')
         self.logger.info('Run command: %s', self.command)
         process = subprocess.Popen(shlex.split(self.command), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                    bufsize=1, universal_newlines=True)
